@@ -168,14 +168,14 @@ func (o *Out) Execute() error {
 	}
 
 	opts := req.Source.NewOptions()
-	err = resource.RetryOnRateLimit(func() error {
+	err = resource.RetryOnTransientError(func() error {
 		return req.Source.SetOptions(&opts)
 	})
 	if err != nil {
 		return fmt.Errorf("failed to set repo/auth options: %w", err)
 	}
 
-	err = resource.RetryOnRateLimit(func() error {
+	err = resource.RetryOnTransientError(func() error {
 		return put(req, img, tagsToPush, opts)
 	})
 	if err != nil {

@@ -13,6 +13,7 @@ var ExchangeACRRefreshToken = exchangeACRRefreshToken
 var AcrChallengeTenant = acrChallengeTenant
 var NewACRHTTPClient = newACRHTTPClient
 var ResolveAzureCloud = resolveAzureCloud
+var IsTransientError = isTransientError
 
 // PlainHTTPClient is a test helper client used for plain-HTTP test servers.
 var PlainHTTPClient = &http.Client{Timeout: 5 * time.Second}

@@ -136,7 +136,7 @@ func downloadWithRetry(tag name.Tag, source resource.Source, params resource.Get
 		return fmt.Errorf("resolve repository name: %w", err)
 	}
 
-	return resource.RetryOnRateLimit(func() error {
+	return resource.RetryOnTransientError(func() error {
 		opts, err := source.AuthOptions(repo, []string{transport.PullScope})
 		if err != nil {
 			return err

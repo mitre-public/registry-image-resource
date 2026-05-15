@@ -127,6 +127,9 @@ differences:
     <br>
     If the value appends with <code>-0</code> for pre-release versions,
     <code>pre_releases</code> needs to be <code>true</code>.
+    <br/>
+    If the tag is prepended with `v`, it will be ignored when comparing
+    the tag against the constraint.
     </td>
   </tr>
   <tr>

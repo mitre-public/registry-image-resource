@@ -1,0 +1,40 @@
+# CRE downstream build: publishes this fork as a Concourse resource-type image
+# to GHCR so core-resource-types can pin it for the harbor-image resource.
+# Lives on master only (not on the upstream PR branch) so the upstream PR to
+# concourse/registry-image-resource stays free of MITRE-specific CI.
+name: CRE build and push
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: docker/setup-buildx-action@v4
+
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build only the `resource` stage (the runnable resource image); the
+      # `tests` stage needs registry secrets and isn't needed for publishing.
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          target: resource
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/mitre-public/registry-image-resource:cre
+            ghcr.io/mitre-public/registry-image-resource:cre-${{ github.sha }}
